@@ -6,8 +6,11 @@ import re
 from flask import Flask, flash, get_flashed_messages, redirect, render_template, request, url_for
 
 
+DEVELOPMENT_SECRET_KEY = "dev-secret-key-change-me"
+DEBUG_MODE = os.environ.get("FLASK_DEBUG", "0") == "1"
+
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key-change-me")
+app.secret_key = os.environ.get("SECRET_KEY", DEVELOPMENT_SECRET_KEY)
 
 ALLOWED_OPERATORS = {
     ast.Add: operator.add,
@@ -69,4 +72,5 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=DEBUG_MODE)
